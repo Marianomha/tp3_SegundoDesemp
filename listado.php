@@ -21,7 +21,9 @@ require_once 'funciones/conexion.php';
     $ListadoSolicitudes = Listar_Solicitudes2($MiConexion);
 
     $Cantidad_ListadoSolicitudes = count($ListadoSolicitudes);
-    $SumaSolicitudes=0 ;
+
+    $MensajeSumaSolicitudes=0;
+    
 
     
 
@@ -34,30 +36,7 @@ require_once 'funciones/conexion.php';
 ?>
 
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta name="description" content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
-    <!-- Twitter meta-->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:site" content="@pratikborsadiya">
-    <meta property="twitter:creator" content="@pratikborsadiya">
-    <!-- Open Graph Meta-->   
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Vali Admin">
-    <meta property="og:title" content="Vali - Free Bootstrap 4 admin theme">
-    <meta property="og:url" content="http://pratikborsadiya.in/blog/vali-admin">
-    <meta property="og:image" content="http://pratikborsadiya.in/blog/vali-admin/hero-social.png">
-    <meta property="og:description" content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
-    <title>Listado - Vali Admin</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Main CSS-->
-    <link rel="stylesheet" type="text/css" href="css/main.css">
-    <!-- Font-icon css-->
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  </head>
+<?php require_once 'headlistado.php'; ?>
   <body class="app sidebar-mini">
     <!-- Navbar-->
     <header class="app-header"><a class="app-header__logo" href="index.html">Mi Panel</a>
@@ -120,30 +99,7 @@ require_once 'funciones/conexion.php';
       </ul>
     </header>
     <!-- Sidebar menu-->
-    <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
-    <aside class="app-sidebar">
-      <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="images/team/<?php echo $_SESSION['Usuario_Imagen']; ?>" alt="<?php echo $_SESSION['Usuario_Nombre']; ?>">
-        <div>
-          <p class="app-sidebar__user-name"><?php echo $_SESSION['Usuario_Nombre']. ' '.$_SESSION['Usuario_Apellido']; ?></p>
-          <p class="app-sideba__user-designation"><?php echo $_SESSION['Usuario_Rol']; ?></p>
-        </div>
-      </div>
-      <ul class="app-menu">
-        <li><a class="app-menu__item active" href="index.php"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Inicio</span></a></li>
-
-        <li><a class="app-menu__item" href="carga.php"><i class="app-menu__icon fa fa-edit"></i><span class="app-menu__label">Registro</span></a></li>
-
-        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-th-list"></i><span class="app-menu__label">Listados</span><i class="treeview-indicator fa fa-angle-right"></i></a>
-          <ul class="treeview-menu">
-            <li><a class="treeview-item" href="listado.php"><i class="icon fa fa-circle-o"></i> Listado de solicitudes</a></li>
-            <!--otros listados
-            <li><a class="treeview-item" href="listado.html"><i class="icon fa fa-circle-o"></i> Listado2</a></li>
-            <li><a class="treeview-item" href="listado.html"><i class="icon fa fa-circle-o"></i> Listado3</a></li>            
-            -->
-          </ul>
-        </li>
-      </ul>
-    </aside>
+    <?php require_once 'asidelistado.php'; ?>
     <!-- fin Sidebar menu-->
     <main class="app-content">
       <div class="app-title">
@@ -178,7 +134,7 @@ require_once 'funciones/conexion.php';
         
         <div class="col-md-12">
           <div class="tile">
-            <h3 class="tile-title">Solicitudes <?php echo 'Nro'.$SumaSolicitudes ?></h3>
+            <h3 class="tile-title">Solicitudes Nro <?php echo $MensajeSumaSolicitudes; ?></h3>
             <div class="table-responsive">
               <table class="table">
                 <thead>
@@ -198,14 +154,22 @@ require_once 'funciones/conexion.php';
                  <?php require_once 'funciones/color_TipoFuncion.php'; 
                      require_once 'funciones/conocer_TipoSolicitud.php'; 
                     require_once 'funciones/selectId_Usuarios.php';
+                    require_once 'funciones/formatear_fecha.php';
+
+                    
                      ?>
 
 
+             
                   
-                  
-                  <?php for ($i=0; $i<$Cantidad_ListadoSolicitudes; $i++) { ?>
+                  <?php 
+                 
+                  for ($i=0; $i<$Cantidad_ListadoSolicitudes; $i++) { ?>
 
                   <?php $IdUsuario= Listar_SolicitudesId($MiConexion,$ListadoSolicitudes[$i]['ID_USUARIO']); ?>
+                  
+                  
+                  
                   <?php  if($_SESSION['Usuario_Rol'] == 'Administrador')  { ?>
                     
                     
@@ -224,7 +188,7 @@ require_once 'funciones/conexion.php';
                       <td><?php echo conocerTipoSolcitud($ListadoSolicitudes[$i]['ID_TIPOSOLICITUD']); ?></td>
 
                       <?php 
-                      require_once 'funciones/formatear_fecha.php';
+                     
                       ?>
                       <td><?php echo formatearFecha($ListadoSolicitudes[$i]['FECHACARGA']); ?></td>
 
@@ -240,6 +204,10 @@ require_once 'funciones/conexion.php';
                         <a href="#"><i class="app-menu__icon fa fa-cog"></i>Eliminar...</a>
                       </td>
                     </tr>
+
+                    <?php $MensajeSumaSolicitudes++; ?>
+
+                   
                    
                     <?php } ?>
                      
@@ -265,7 +233,7 @@ require_once 'funciones/conexion.php';
                       <td><?php echo conocerTipoSolcitud($ListadoSolicitudes[$i]['ID_TIPOSOLICITUD']); ?></td>
 
                       <?php 
-                      require_once 'funciones/formatear_fecha.php';
+                      
                       ?>
                       <td><?php echo formatearFecha($ListadoSolicitudes[$i]['FECHACARGA']); ?></td>
 
@@ -281,6 +249,8 @@ require_once 'funciones/conexion.php';
                         <a href="#"><i class="app-menu__icon fa fa-cog"></i>Eliminar...</a>
                       </td>
                     </tr>
+                    <?php $MensajeSumaSolicitudes++; ?>
+                    
                     <?php } ?>
 
 
@@ -305,7 +275,7 @@ require_once 'funciones/conexion.php';
                       <td><?php echo conocerTipoSolcitud($ListadoSolicitudes[$i]['ID_TIPOSOLICITUD']); ?></td>
 
                       <?php 
-                      require_once 'funciones/formatear_fecha.php';
+                      
                       ?>
                       <td><?php echo formatearFecha($ListadoSolicitudes[$i]['FECHACARGA']); ?></td>
 
@@ -321,7 +291,9 @@ require_once 'funciones/conexion.php';
                         <a href="#"><i class="app-menu__icon fa fa-cog"></i>Eliminar...</a>
                       </td>
                     </tr>
+                    <?php $MensajeSumaSolicitudes++; ?>
                     <?php } ?>
+                    
                     <?php } ?>
 
 
@@ -345,7 +317,7 @@ require_once 'funciones/conexion.php';
                       <td><?php echo conocerTipoSolcitud($ListadoSolicitudes[$i]['ID_TIPOSOLICITUD']); ?></td>
 
                       <?php 
-                      require_once 'funciones/formatear_fecha.php';
+                      
                       ?>
                       <td><?php echo formatearFecha($ListadoSolicitudes[$i]['FECHACARGA']); ?></td>
 
@@ -361,30 +333,10 @@ require_once 'funciones/conexion.php';
                         <a href="#"><i class="app-menu__icon fa fa-cog"></i>Eliminar...</a>
                       </td>
                     </tr>
+                    <?php $MensajeSumaSolicitudes++; ?>
                       <?php } ?>
+                      
                       <?php } ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    <?php } ?>
-
-
-                   
-                     
-                 
-
-
-
 
 
                     
@@ -393,73 +345,22 @@ require_once 'funciones/conexion.php';
 
 
 
+                   
 
 
-                 
+
+                    <?php  } ?>
              
 
-                  <!--<tr class="table-info">
-                    <td>2</td>
-                    <td>Modificar lista de precios</td>
-                    <td>Generar cálculo automático de precio segun variación del dólar.</td>
-                    <td>Desarrollo nueva funcionalidad </td>
-                    <td>01/11/2023 12:55:56</td>
-                    <td>03/11/2023 12:55:56</td>
-                    <td>Gisela Marquez</td>
-                    <td>
-                      <a href="#">Ver detalles...</a>
-                      <a href="#"><i class="app-menu__icon fa fa-cog"></i>Eliminar...</a>
-                    </td>
-                  </tr>
-                 
-                  <tr class="table-danger">
-                      <td>3</td>
-                      <td>Sin acceso a la VPN</td>
-                      <td>Solicito me habiliten el ingreso a la red de la empresa</td>
-                      <td>Soporte tecnico</td>
-                      <td>01/11/2023 13:55:21</td>
-                      <td>02/11/2023 13:55:21</td>
-                      <td>Martin Cardozo</td>
-                      <td>
-                        <a href="#">Ver detalles...</a>
-                        <a href="#"><i class="app-menu__icon fa fa-cog"></i>Eliminar...</a>
-                      </td>
-                  </tr>
-
-                  <tr class="table-warning">
-                      <td>4</td>
-                      <td>No muestra mensaje al fallar la clave de acceso</td>
-                      <td>En acceso al sistema debe mostrar mensaje si hay fallo en la clave.</td>
-                      <td>Reporte de error</td>
-                      <td>02/11/2023 08:25:42</td>
-                      <td>05/11/2023 08:25:42</td>
-                      <td>Paola Torres</td>
-                      <td>
-                        <a href="#">Ver detalles...</a>
-                        <a href="#"><i class="app-menu__icon fa fa-cog"></i>Eliminar...</a>
-                      </td>
-                  </tr>
                   
-                  <tr class="table-warning">
-                      <td>5</td>
-                      <td>En el login, se ve mensaje</td>
-                      <td>Al ingresar al equipo de trabajo con mi login y clave, veo error de conexion con la base de datos.</td>
-                      <td>Reporte de Error</td>
-                      <td>02/11/2023 14:30:15</td>
-                      <td>09/11/2023 14:30:15</td>
-                      <td>Mario Gimenez</td> 
-                      <td>
-                        <a href="#">Ver detalles...</a>
-                        <a href="#"><i class="app-menu__icon fa fa-cog"></i>Eliminar...</a>
-                      </td>
-                  </tr> -->
-
                 </tbody>
               </table>
             </div>
           </div>
         </div>
-        <div class="clearfix"></div>
+        <div class="clearfix">
+          <?php echo $MensajeSumaSolicitudes; ?>
+        </div>
         
       </div>
     </main>
